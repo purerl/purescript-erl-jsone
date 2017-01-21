@@ -33,7 +33,6 @@ module Erl.Data.Jsone (
 
 import Prelude
 import Data.Newtype (class Newtype)
-import Erl.Data.Binary
 import Erl.Data.List
 import Erl.Data.Tuple
 import Data.Maybe
@@ -46,13 +45,13 @@ foreign import coerce_ :: forall a b. a -> b
 
 type JBoolean = Boolean
 type JNumber = Number
-type JString = Binary
+type JString = String
 type JArray = List Json
 
-newtype JObject = JObject (List (Tuple2 Binary Json))
+newtype JObject = JObject (List (Tuple2 String Json))
 derive instance newtypeJObject :: Newtype JObject _
 
-type JAssoc = Tuple2 Binary Json
+type JAssoc = Tuple2 String Json
 
 fromNull :: JNull -> Json
 fromNull = coerce_
@@ -139,5 +138,5 @@ foreign import isNull :: Json -> Boolean
 jsonEmptyObject :: Json
 jsonEmptyObject = fromObject (JObject nil)
 
-jsonSingletonObject :: Binary -> Json -> Json
+jsonSingletonObject :: String -> Json -> Json
 jsonSingletonObject k v = fromObject $ JObject $ tuple2 k v : nil

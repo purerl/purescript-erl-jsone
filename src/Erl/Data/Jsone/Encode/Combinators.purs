@@ -10,7 +10,6 @@ module Erl.Data.Jsone.Encode.Combinators where
 
 import Prelude
 import Data.Newtype (unwrap)
-import Erl.Data.Binary (bin)
 import Erl.Data.Jsone (JAssoc, Json, JObject(..), foldJsonObject, jsonSingletonObject, fromObject)
 import Erl.Data.Jsone.Encode.Class (class EncodeJson, encodeJson)
 import Erl.Data.List ((:))
@@ -21,7 +20,7 @@ infix 7 assoc as :=
 
 -- | The named implementation of the `(:=)` operator.
 assoc :: forall a. EncodeJson a => String -> a -> JAssoc
-assoc k = tuple2 (bin k) <<< encodeJson
+assoc k = tuple2 k <<< encodeJson
 
 -- | Extends a Json object with a `JAssoc` property.
 infixr 6 extend as ~>

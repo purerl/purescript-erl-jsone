@@ -1,12 +1,11 @@
 module Erl.Data.Jsone.Printer (printJson, prettyPrintJson) where
 
-import Erl.Data.Binary
 import Erl.Data.Jsone (Json)
 
-foreign import encode_ :: Json -> Int -> Int -> Binary
+foreign import encode_ :: Json -> Int -> Int -> String
 
-printJson :: Json -> Binary
+printJson :: Json -> String
 printJson j = encode_ j 0 0
 
-prettyPrintJson :: Json -> Binary
+prettyPrintJson :: Json -> String
 prettyPrintJson j = encode_ j 1 2

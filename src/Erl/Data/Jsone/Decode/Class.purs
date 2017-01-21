@@ -12,7 +12,6 @@ import Data.Int (fromNumber)
 import Data.Maybe (maybe, Maybe(..))
 import Data.Traversable (traverse)
 import Data.Tuple (Tuple(..))
-import Erl.Data.Binary (Binary, bin, stringFromBin)
 import Erl.Data.Jsone (JArray, JObject(..), Json, foldJsonBoolean, foldJsonNull, foldJsonNumber, foldJsonString, isNull, toArray, toObject, toString)
 import Erl.Data.List (List)
 import Erl.Data.Tuple (Tuple2, Tuple3, tuple2, tuple3, uncurry2)
@@ -61,13 +60,13 @@ instance decodeJsonEither :: (DecodeJson a, DecodeJson b) => DecodeJson (Either 
       decodeJObject json >>= \obj -> do
         tag <- maybe (Left "Expected field 'tag'") Right $ find "tag" obj
         val <- maybe (Left "Expected field 'value'") Right $ find "value" obj
-        case stringFromBin <$> toString tag of
+        case toString tag of
           Just "Right" -> Right <$> decodeJson val
           Just "Left" -> Left <$> decodeJson val
           _ -> Left "'tag' field was not \"Left\" or \"Right\""
     where
       find :: String -> JObject -> Maybe Json
-      find k (JObject obj) = findMap (match $ bin k) obj
+      find k (JObject obj) = findMap (match k) obj
 
       match :: forall d e. (Eq d) => d -> Tuple2 d e -> Maybe e
       match s = uncurry2 $ (if _ then Just else const Nothing) <<< (==) s
@@ -88,9 +87,6 @@ instance decodeJsonInt :: DecodeJson Int where
     <=< decodeJson
 
 instance decodeJsonString :: DecodeJson String where
-  decodeJson = foldJsonString (Left "Value is not a String") (Right <<< stringFromBin)
-
-instance decodeJsonBinary :: DecodeJson Binary where
   decodeJson = foldJsonString (Left "Value is not a String") Right
 
 instance decodeJsonJson :: DecodeJson Json where

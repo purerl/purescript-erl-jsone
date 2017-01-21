@@ -7,7 +7,6 @@
         "integers",
         "assert",
         "either",
-        "erl-binary",
         "erl-lists",
         "erl-tuples"
     ]

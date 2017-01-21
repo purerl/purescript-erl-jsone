@@ -9,7 +9,6 @@ import Erl.Data.Jsone.Encode.Combinators
 
 import Erl.Data.Jsone.Decode.Combinators
 import Erl.Data.Jsone.Decode.Class
-import Erl.Data.Binary (bin, stringFromBin, Binary)
 import Erl.Data.List (nil, (:), List)
 import Erl.Data.Tuple
 import Data.Either (either, Either(..))
@@ -24,22 +23,22 @@ foreign import debugVal :: forall eff a. a -> Eff (debug :: DEBUG | eff) Unit
 main = do
   debugMsg "Running PureScript tests!"
 
-  debugVal $ printJson $ fromString $ bin $ "hello world"
-  assert $ "\"hello world\"" == (stringFromBin $ printJson $ fromString $ bin $ "hello world")
+  debugVal $ printJson $ fromString $ "hello world"
+  assert $ "\"hello world\"" == (printJson $ fromString $ "hello world")
   debugVal $ printJson $ fromBoolean $ true
-  assert $ "true" == (stringFromBin $ printJson $ fromBoolean true)
-  assert $ "false" == (stringFromBin $ printJson $ fromBoolean false)
+  assert $ "true" == (printJson $ fromBoolean true)
+  assert $ "false" == (printJson $ fromBoolean false)
   debugVal $ printJson $ fromArray (fromNumber 1.0 : fromNumber 2.0 : fromNumber 3.0 : nil)
   let fortyTwo = printJson $ fromArray $ (fromNumber 42.0 : nil)
   debugVal fortyTwo
-  assert $ """[4.20000000000000000000e+01]""" == stringFromBin fortyTwo
+  assert $ """[4.20000000000000000000e+01]""" == fortyTwo
   let obj = "foo" := 42.0
             ~> "bar" := "baz"
             ~> "x" := ("nestedKey" := true ~> jsonEmptyObject)
             ~> "y" := false
             ~> jsonEmptyObject
-  assert $ """{"foo":4.20000000000000000000e+01,"bar":"baz","x":{"nestedKey":true},"y":false}""" == stringFromBin (printJson obj)
-  debugMsg $ stringFromBin $ prettyPrintJson obj
+  assert $ """{"foo":4.20000000000000000000e+01,"bar":"baz","x":{"nestedKey":true},"y":false}""" == printJson obj
+  debugMsg $ prettyPrintJson obj
   assert $ """{
   "foo": 4.20000000000000000000e+01,
   "bar": "baz",
@@ -47,7 +46,7 @@ main = do
     "nestedKey": true
   },
   "y": false
-}""" == stringFromBin (prettyPrintJson obj)
+}""" == prettyPrintJson obj
 
   assert $ Right "baz" == (decodeJson obj >>= (_ .? "bar"))
   assert $ Right false == (decodeJson obj >>= (_ .? "y"))
@@ -57,8 +56,8 @@ main = do
       f = const false
       z :: forall a. a -> Number
       z = const 0.0
-      s :: forall a. a -> Binary
-      s = const (bin "")
+      s :: forall a. a -> String
+      s = const ""
 
   assert $ foldJson (const true) f f f f f $ jsonNull
   assert $ foldJsonNull false (const true) jsonNull
@@ -66,7 +65,7 @@ main = do
   assert $ foldJsonBoolean false (const true) $ fromBoolean true
   assert $ (42.0 == _) $ foldJson z z id z z z $ fromNumber 42.0
   assert $ (42.0 == _) $ foldJsonNumber 0.0 id $ fromNumber 42.0
-  assert $ (bin "Hello" == _) $ foldJson s s s id s s $ fromString $ bin "Hello"
-  assert $ (bin "Hello" == _) $ foldJsonString (bin "Hello") id (fromString $ bin "Hello")
+  assert $ ("Hello" == _) $ foldJson s s s id s s $ fromString "Hello"
+  assert $ ("Hello" == _) $ foldJsonString "Hello" id (fromString "Hello")
 
-  assert $ Right (Just (bin "roundtrip")) == (toString <$> (jsonParser $ printJson $ fromString $ bin "roundtrip"))
+  assert $ Right (Just "roundtrip") == (toString <$> (jsonParser $ printJson $ fromString $ "roundtrip"))

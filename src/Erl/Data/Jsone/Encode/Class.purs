@@ -5,7 +5,6 @@ import Data.Either (Either, either)
 import Data.Int (toNumber)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
-import Erl.Data.Binary (Binary, bin)
 import Erl.Data.Jsone (Json, JObject(..), fromArray, fromBoolean, fromNumber, fromObject, fromString, jsonNull)
 import Erl.Data.List (List, fromFoldable, nil, (:))
 import Erl.Data.Tuple (Tuple2, Tuple3, Tuple4, Tuple5, tuple2, uncurry2, uncurry3, uncurry4, uncurry5)
@@ -38,7 +37,7 @@ instance encodeJsonEither :: (EncodeJson a, EncodeJson b) => EncodeJson (Either 
     obj :: forall c. EncodeJson c => String -> c -> Json
     obj tag x =
       fromObject $ JObject $
-        tuple2 (bin "tag") (fromString $ bin tag) : tuple2 (bin "value") (encodeJson x) : nil
+        tuple2 "tag" (fromString tag) : tuple2 "value" (encodeJson x) : nil
 
 instance encodeJsonUnit :: EncodeJson Unit where
   encodeJson = const jsonNull
@@ -53,9 +52,6 @@ instance encodeJsonInt :: EncodeJson Int where
   encodeJson = fromNumber <<< toNumber
 
 instance encodeJsonJString :: EncodeJson String where
-  encodeJson = fromString <<< bin
-
-instance encodeJsonBinary :: EncodeJson Binary where
   encodeJson = fromString
 
 instance encodeJsonJson :: EncodeJson Json where

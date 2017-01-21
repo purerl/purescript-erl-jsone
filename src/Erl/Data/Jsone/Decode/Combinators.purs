@@ -9,8 +9,6 @@ import Prelude
 import Data.Either (Either(..))
 import Data.Foldable (findMap)
 import Data.Maybe (Maybe(..), maybe)
-import Erl.Data.Binary (bin)
-
 import Erl.Data.Jsone (JObject(..))
 import Erl.Data.Jsone.Decode.Class (class DecodeJson, decodeJson)
 import Erl.Data.Tuple (Tuple2, uncurry2)
@@ -20,7 +18,7 @@ getField (JObject o) s =
   maybe
     (Left $ "Expected field " <> show s)
     decodeJson
-    (findMap (match $ bin s) o)
+    (findMap (match s) o)
 
 infix 7 getField as .?
 
@@ -29,7 +27,7 @@ getFieldOptional (JObject o) s =
   maybe
     (pure Nothing)
     decode
-    (findMap (match $ bin s) o)
+    (findMap (match s) o)
   where
     decode json = Just <$> decodeJson json
 
