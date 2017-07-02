@@ -1,22 +1,20 @@
 module Test.Main where
 
 import Prelude
-import Control.Monad.Eff.Console (CONSOLE, log)
-import Erl.Data.Jsone
-import Erl.Data.Jsone.Printer (printJson, prettyPrintJson)
+
+import Control.Monad.Eff (Eff, kind Effect)
+import Data.Either (Either(Right))
+import Data.Maybe (Maybe(..))
+import Erl.Data.Jsone (foldJson, foldJsonBoolean, foldJsonNull, foldJsonNumber, foldJsonString, fromArray, fromBoolean, fromNumber, fromString, jsonEmptyObject, jsonNull, toString)
+import Erl.Data.Jsone.Decode.Class (decodeJson)
+import Erl.Data.Jsone.Decode.Combinators ((.?))
+import Erl.Data.Jsone.Encode.Combinators ((:=), (~>))
 import Erl.Data.Jsone.Parser (jsonParser)
-import Erl.Data.Jsone.Encode.Combinators
+import Erl.Data.Jsone.Printer (printJson, prettyPrintJson)
+import Erl.Data.List (nil, (:))
+import Test.Assert (assert)
 
-import Erl.Data.Jsone.Decode.Combinators
-import Erl.Data.Jsone.Decode.Class
-import Erl.Data.List (nil, (:), List)
-import Erl.Data.Tuple
-import Data.Either (either, Either(..))
-import Data.Maybe
-import Control.Monad.Eff (Eff)
-import Test.Assert
-
-foreign import data DEBUG :: !
+foreign import data DEBUG :: Effect
 foreign import debugMsg :: forall eff. String -> Eff (debug :: DEBUG | eff) Unit
 foreign import debugVal :: forall eff a. a -> Eff (debug :: DEBUG | eff) Unit
 

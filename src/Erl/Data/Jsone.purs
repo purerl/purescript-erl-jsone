@@ -37,9 +37,9 @@ import Erl.Data.List
 import Erl.Data.Tuple
 import Data.Maybe
 
-foreign import data Json :: *
+foreign import data Json :: Type
 
-foreign import data JNull :: *
+foreign import data JNull :: Type
 
 foreign import coerce_ :: forall a b. a -> b
 

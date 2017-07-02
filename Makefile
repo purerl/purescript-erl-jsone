@@ -3,7 +3,7 @@
 all: ps
 
 ps:
-	psc-package sources | xargs pserlc 'test/**/*.purs' 'src/**/*.purs'
+	psc-package sources | xargs purs compile 'test/**/*.purs' 'src/**/*.purs'
 
 test: ps
 	cp output/*/*.erl test/mylib/src/ps/
