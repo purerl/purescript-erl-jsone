@@ -2,9 +2,9 @@ module Test.Main where
 
 import Prelude
 
-import Control.Monad.Eff (Eff, kind Effect)
 import Data.Either (Either(Right))
 import Data.Maybe (Maybe(..))
+import Effect (Effect)
 import Erl.Data.Jsone (foldJson, foldJsonBoolean, foldJsonNull, foldJsonNumber, foldJsonString, fromArray, fromBoolean, fromNumber, fromString, jsonEmptyObject, jsonNull, toString)
 import Erl.Data.Jsone.Decode.Class (decodeJson)
 import Erl.Data.Jsone.Decode.Combinators ((.?))
@@ -14,10 +14,10 @@ import Erl.Data.Jsone.Printer (printJson, prettyPrintJson)
 import Erl.Data.List (nil, (:))
 import Test.Assert (assert)
 
-foreign import data DEBUG :: Effect
-foreign import debugMsg :: forall eff. String -> Eff (debug :: DEBUG | eff) Unit
-foreign import debugVal :: forall eff a. a -> Eff (debug :: DEBUG | eff) Unit
+foreign import debugMsg :: String -> Effect Unit
+foreign import debugVal :: forall a. a -> Effect Unit
 
+main :: Effect Unit
 main = do
   debugMsg "Running PureScript tests!"
 
@@ -59,11 +59,11 @@ main = do
 
   assert $ foldJson (const true) f f f f f $ jsonNull
   assert $ foldJsonNull false (const true) jsonNull
-  assert $ foldJson f id f f f f $ fromBoolean true
+  assert $ foldJson f identity f f f f $ fromBoolean true
   assert $ foldJsonBoolean false (const true) $ fromBoolean true
-  assert $ (42.0 == _) $ foldJson z z id z z z $ fromNumber 42.0
-  assert $ (42.0 == _) $ foldJsonNumber 0.0 id $ fromNumber 42.0
-  assert $ ("Hello" == _) $ foldJson s s s id s s $ fromString "Hello"
-  assert $ ("Hello" == _) $ foldJsonString "Hello" id (fromString "Hello")
+  assert $ (42.0 == _) $ foldJson z z identity z z z $ fromNumber 42.0
+  assert $ (42.0 == _) $ foldJsonNumber 0.0 identity $ fromNumber 42.0
+  assert $ ("Hello" == _) $ foldJson s s s identity s s $ fromString "Hello"
+  assert $ ("Hello" == _) $ foldJsonString "Hello" identity (fromString "Hello")
 
   assert $ Right (Just "roundtrip") == (toString <$> (jsonParser $ printJson $ fromString $ "roundtrip"))

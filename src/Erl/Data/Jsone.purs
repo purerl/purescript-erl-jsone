@@ -33,9 +33,9 @@ module Erl.Data.Jsone (
 
 import Prelude
 import Data.Newtype (class Newtype)
-import Erl.Data.List
-import Erl.Data.Tuple
-import Data.Maybe
+import Erl.Data.List (List, nil, (:))
+import Erl.Data.Tuple (Tuple2, tuple2)
+import Data.Maybe (Maybe(..))
 
 foreign import data Json :: Type
 

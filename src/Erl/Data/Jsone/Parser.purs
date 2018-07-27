@@ -1,6 +1,5 @@
 module Erl.Data.Jsone.Parser (jsonParser) where
 
-import Prelude
 import Erl.Data.Jsone (Json)
 import Data.Either (Either(..))
 

@@ -10,21 +10,21 @@ jsonNull() -> null.
 isNull(null) -> true;
 isNull(_) -> false.
 
-toNull_(Nothing,Just,null) -> Just(null);
+toNull_(_Nothing,Just,null) -> Just(null);
 toNull_(Nothing,_,_) -> Nothing.
 
-toBoolean_(Nothing,Just,X) when is_boolean(X) -> Just(X);
-toBoolean_(Nothing,Just,X) -> Nothing.
+toBoolean_(_Nothing,Just,X) when is_boolean(X) -> Just(X);
+toBoolean_(Nothing,_Just,_X) -> Nothing.
 
-toNumber_(Nothing,Just,X) when is_float(X) -> Just(X);
-toNumber_(Nothing,Just,X) -> Nothing.
+toNumber_(_Nothing,Just,X) when is_float(X) -> Just(X);
+toNumber_(Nothing,_Just,_X) -> Nothing.
 
 % TODO is binary
-toString_(Nothing,Just,X) when is_binary(X) -> Just(X);
-toString_(Nothing,Just,X) -> Nothing.
+toString_(_Nothing,Just,X) when is_binary(X) -> Just(X);
+toString_(Nothing,_Just,_X) -> Nothing.
 
-toArray_(Nothing,Just,X) when is_list(X) -> Just(X);
-toArray_(Nothing,Just,X) -> Nothing.
+toArray_(_Nothing,Just,X) when is_list(X) -> Just(X);
+toArray_(Nothing,_Just,_X) -> Nothing.
 
 toObject_(_,Just,{X}) when is_list(X) -> Just(X);
 toObject_(Nothing,_,_) -> Nothing.

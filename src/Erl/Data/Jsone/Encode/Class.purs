@@ -55,7 +55,7 @@ instance encodeJsonJString :: EncodeJson String where
   encodeJson = fromString
 
 instance encodeJsonJson :: EncodeJson Json where
-  encodeJson = id
+  encodeJson = identity
 
 instance encodeJsonArray :: EncodeJson a => EncodeJson (Array a) where
   encodeJson json = fromArray (encodeJson <$> fromFoldable json)

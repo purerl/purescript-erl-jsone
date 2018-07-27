@@ -4,5 +4,5 @@
 jsonParserImpl(Left,Right,JsonString) ->
   case jsone:try_decode(JsonString, [{object_format, tuple}]) of
     {ok, Value, _} -> Right(Value);
-    {error, {Reason, _}} -> Left("Error decoding JSON")
+    {error, {_Reason, _}} -> Left("Error decoding JSON")
   end.
